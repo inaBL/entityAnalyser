@@ -14,7 +14,7 @@ def get_top_tokens(document, number=10) -> list:
     return Counter(tokens).most_common(number)
 
 
-# Issue with Spacy stopwords not recognising members, usecase 'and'. need to debug
+# Issue with Spacy stopwords not recognising members, use case 'and'. need to debug
 def get_top_tokens_cleaned(document, number=10) -> list:
     tokens = [token.text for token in document if token.is_punct is not True
               and token.is_stop is not True]

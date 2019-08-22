@@ -1,8 +1,2 @@
 # Test corpora and text files
-OB_defendant_speech.csv
-OB_defendant_speech.xlsx
-dracula.txt
-rossetti.txt
-goblin.txt
-
-habernal.gurevych.2015.argumentation.mining.CL.data/
+data/
