@@ -6,6 +6,8 @@ OUTPUT: Basic stats in csv file.
 '''
 
 import spacy
+from timeit import default_timer as timer
+from datetime import datetime
 from spacy.lang.en.stop_words import STOP_WORDS
 from collections import Counter
 
@@ -26,6 +28,7 @@ def get_top_tokens(document, number=10) -> list:
 # STOP_WORDS imported as workaround, en_core_web_lg has known bug with stop words.
 def get_top_tokens_cleaned(document, number=10) -> list:
     tokens = [token.text for token in document if '\n' not in token.text
+              and ' ' not in token.text
               and token.is_punct is not True
               and token.text not in STOP_WORDS]
 
@@ -33,9 +36,15 @@ def get_top_tokens_cleaned(document, number=10) -> list:
 
 
 if __name__ == '__main__':
-    # pass
+    print(f'Starting text to document import at {datetime.now()} ...')
+    start = timer()
+
     # Set document to be analysed below
-    with open('/Users/ibl/Documents/entityAnalyser/data/goblin.txt') as f:
+    with open('/Users/ibl/Documents/entityAnalyser/data/dracula.txt') as f:
         doc = nlp(f.read())
+
+    end = timer()
+    print(f'Finished text to document import at {datetime.now()}. '
+          f'\nTook {end - start} seconds')
 
     print(get_top_tokens_cleaned(doc))
