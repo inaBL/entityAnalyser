@@ -25,12 +25,9 @@ def get_top_tokens(document, number=10) -> list:
 # Return as default 10 most common tokens and their counts , w/o punct or stop words, for full list print STOP_WORDS
 # STOP_WORDS imported as workaround, en_core_web_lg has known bug with stop words.
 def get_top_tokens_cleaned(document, number=10) -> list:
-    tokens = [token.text for token in document if token.is_punct is not True
+    tokens = [token.text for token in document if '\n' not in token.text
+              and token.is_punct is not True
               and token.text not in STOP_WORDS]
-
-    for item in tokens:
-        if item[0] == '\\n' or item[0] == '\\n\\n':
-            tokens.remove(item)
 
     return Counter(tokens).most_common(number)
 
