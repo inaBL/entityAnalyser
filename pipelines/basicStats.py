@@ -35,6 +35,12 @@ def get_top_tokens_cleaned(document, number=10) -> list:
     return Counter(tokens).most_common(number)
 
 
+# Return as default 10 most common named entities and their counts
+def get_named_entities(document, number=10) -> list:
+    entities = [ent.text for ent in document.ents if '\n' not in ent.text]
+    return Counter(entities).most_common(number)
+
+
 if __name__ == '__main__':
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
@@ -47,4 +53,4 @@ if __name__ == '__main__':
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(get_top_tokens_cleaned(doc))
+    print(get_named_entities(doc))
