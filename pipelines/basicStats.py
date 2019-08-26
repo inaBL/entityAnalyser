@@ -5,7 +5,7 @@ En_core_web_lg may take time to load depending on your set up, consider download
 
 NOTE: Document to doc conversion takes approx 0,4 ms per token.
 
-INPUT: Text-file, .txt assumed, for pdf import and use pandas.
+INPUT: Text for spacy document object.
 OUTPUT: Basic stats in csv file.
 '''
 
@@ -63,6 +63,13 @@ def get_top_lemmas_cleaned(document, number=10) -> list:
     return Counter(lemmas).most_common(number)
 
 
+# Return all POS-tags and their frequencies in descending order
+def get_pos(document) -> list:
+    pos = [token.pos_ for token in document]
+
+    return Counter(pos).most_common()
+
+
 if __name__ == '__main__':
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
@@ -75,5 +82,4 @@ if __name__ == '__main__':
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(get_top_lemmas(doc))
-    print(get_top_lemmas_cleaned(doc))
+    print(get_pos(doc))
