@@ -10,6 +10,7 @@ OUTPUT: Basic stats in csv file.
 '''
 
 import spacy
+import csv
 from timeit import default_timer as timer
 from datetime import datetime
 from spacy.lang.en.stop_words import STOP_WORDS
@@ -18,8 +19,10 @@ from collections import Counter
 nlp = spacy.load('en_core_web_lg')
 
 
-def get_token_count(document) -> int:
-    return len(document)
+def get_token_count(document) -> list:
+    tokens = [('Total tokens', len(document))]
+
+    return tokens
 
 
 # Return as default 10 most common tokens and their counts.
@@ -71,10 +74,10 @@ def get_pos(document) -> list:
 
 
 if __name__ == '__main__':
+    # Set document to be analysed below
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
 
-    # Set document to be analysed below
     with open('/Users/ibl/Documents/entityAnalyser/data/dracula.txt') as f:
         doc = nlp(f.read())
 
@@ -82,4 +85,28 @@ if __name__ == '__main__':
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(get_pos(doc))
+    # Set preferred stat file location below, if no file exists, new one will be created.
+    # NOTE: Writes over file
+    with open('/Users/ibl/Documents/entityAnalyser/stats/dracula_stats.csv', 'w+', newline='\n') as csvfile:
+        statwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        for item in get_token_count(doc):
+            statwriter.writerow(item)
+        statwriter.writerow("")
+        statwriter.writerow(["Top tokens"])
+        for item in get_top_tokens_cleaned(doc):
+            statwriter.writerow(item)
+        statwriter.writerow("")
+        statwriter.writerow(["Top lemmas"])
+        for item in get_top_lemmas_cleaned(doc):
+            statwriter.writerow(item)
+        statwriter.writerow("")
+        statwriter.writerow(["Named entities"])
+        for item in get_named_entities(doc):
+            statwriter.writerow(item)
+        statwriter.writerow("")
+        statwriter.writerow(["POS-tags"])
+        for item in get_pos(doc):
+            statwriter.writerow(item)
+
+    print("Finished creating the file")
