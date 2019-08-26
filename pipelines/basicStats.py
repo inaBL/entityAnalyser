@@ -1,5 +1,9 @@
 '''
-Functions for basic stat gathering from text files. If run directly, writes a csv file with the stats.
+Functions for basic stat gathering from text files.
+If run directly, writes a csv file with the stats at specified location.
+En_core_web_lg may take time to load depending on your set up, consider downloading and using sm or md versions as needed.
+
+NOTE: Document to doc conversion takes approx 0,4 ms per token.
 
 INPUT: Text-file, .txt assumed, for pdf import and use pandas.
 OUTPUT: Basic stats in csv file.
@@ -38,7 +42,25 @@ def get_top_tokens_cleaned(document, number=10) -> list:
 # Return as default 10 most common named entities and their counts
 def get_named_entities(document, number=10) -> list:
     entities = [ent.text for ent in document.ents if '\n' not in ent.text]
+
     return Counter(entities).most_common(number)
+
+
+# Return as default 10 most common lemmas not including punctuation
+def get_top_lemmas(document, number=10) -> list:
+    lemmas = [token.lemma_ for token in document if token.is_punct is not True]
+
+    return Counter(lemmas).most_common(number)
+
+
+# Return as default 10 most common lemmas not including punctuation, new lines, or stop words
+def get_top_lemmas_cleaned(document, number=10) -> list:
+    lemmas = [token.lemma_ for token in document if '\n' not in token.text
+              and ' ' not in token.text
+              and token.is_punct is not True
+              and token.text not in STOP_WORDS]
+
+    return Counter(lemmas).most_common(number)
 
 
 if __name__ == '__main__':
@@ -53,4 +75,5 @@ if __name__ == '__main__':
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(get_named_entities(doc))
+    print(get_top_lemmas(doc))
+    print(get_top_lemmas_cleaned(doc))
