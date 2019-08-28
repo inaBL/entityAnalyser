@@ -33,5 +33,3 @@ if __name__ == '__main__':
     end = timer()
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
-
-    print(noun_chunks_list_cleaned(noun_chunks_list(doc)))
