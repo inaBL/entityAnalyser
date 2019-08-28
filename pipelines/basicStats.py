@@ -3,6 +3,8 @@ Functions for basic stat gathering from text files.
 If run directly, writes a csv file with the stats at specified location.
 En_core_web_lg may take time to load depending on your set up, consider downloading and using sm or md versions as needed.
 
+Parser and NER limited to 1000000 words as default.
+
 NOTE: Document to doc conversion takes approx 0,4 ms per token.
 
 INPUT: Text for spacy document object.
@@ -78,7 +80,7 @@ if __name__ == '__main__':
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
 
-    with open('/Users/ibl/Documents/entityAnalyser/data/dracula.txt') as f:
+    with open('FILENAME.txt') as f:
         doc = nlp(f.read())
 
     end = timer()
@@ -87,7 +89,7 @@ if __name__ == '__main__':
 
     # Set preferred stat file location below, if no file exists, new one will be created.
     # NOTE: Writes over file
-    with open('/Users/ibl/Documents/entityAnalyser/stats/dracula_stats.csv', 'w+', newline='\n') as csvfile:
+    with open('FILENAME.csv', 'w+', newline='\n') as csvfile:
         statwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         for item in get_token_count(doc):
