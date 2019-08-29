@@ -5,6 +5,7 @@ The pipelines are developed for faster automated processing of named entities an
 The goal is to obtain the sentiment and topics attached to the entities, and enable data export to further platforms.
 
 Sentiment classes use the opinion lexicons by Hu and Liu:
+
 Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." 
 ;       Proceedings of the ACM SIGKDD International Conference on Knowledge 
 ;       Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, 
