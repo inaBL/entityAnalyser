@@ -27,6 +27,35 @@ class Sentiment(Positive, Negative):
         return sentiment
 
     @staticmethod
+    def sentiment_text_values(text_list: list) -> list:
+        sentiment = []
+
+        for word in text_list:
+            if word is not re.search(r"\p{P}+", word):
+                if Sentiment().is_positive(word):
+                    sentiment.append(1)
+                elif Sentiment().is_negative(word):
+                    sentiment.append(-1)
+                else:
+                    sentiment.append(0)
+            else:
+                pass
+
+        return sentiment
+
+    @staticmethod
+    def sentiment_single_word(word: str) -> int:
+        if word is re.search(r"\p{P}+", word):
+            return 0
+        elif Sentiment().is_positive(word):
+            return 1
+        elif Sentiment().is_negative(word):
+            return -1
+        else:
+            return 0
+
+
+    @staticmethod
     def sentiment_score_text(text) -> float:
         score = [item[1] for item in Sentiment().sentiment_text(text)]
         return float(sum(score) / len(score))
