@@ -3,8 +3,6 @@ Functions for basic stat gathering from text files.
 If run directly, writes a csv file with the stats at specified location.
 En_core_web_lg may take time to load depending on your set up, consider downloading and using sm or md versions as needed.
 
-Parser and NER limited to 1000000 words as default.
-
 NOTE: Document to doc conversion takes approx 0,4 ms per token.
 
 INPUT: Text for spacy document object.
@@ -18,7 +16,9 @@ from datetime import datetime
 from spacy.lang.en.stop_words import STOP_WORDS
 from collections import Counter
 
+# Higher max length may cause memory issues, decrease as needed
 nlp = spacy.load('en_core_web_lg')
+nlp.max_length = 1500000
 
 
 def get_token_count(document) -> list:
