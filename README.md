@@ -5,7 +5,7 @@ The pipelines are developed for purpise faster automated processing of named ent
 
 The goal is to obtain the sentiment and topics attached to the entities, and enable data export to further platforms.
 
-###Technical
+### Technical
 Used packages will be included in virtual environment. 
 Main components listed below.
 
@@ -13,7 +13,7 @@ Main components listed below.
 * Spacy 2.0.16
 * PyCharm 2019.2.2
 
-###About Sentiment 
+### About Sentiment 
 
 Sentiment classes use the opinion lexicons by Hu and Liu. Please see the original publication for more information.
 
