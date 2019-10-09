@@ -1,10 +1,12 @@
 import spacy
+from spacy.lemmatizer import Lemmatizer
 from timeit import default_timer as timer
 from datetime import datetime
 from sentiment import classSentiment
 
 nlp = spacy.load('en_core_web_lg')
 s = classSentiment.Sentiment
+lemma = Lemmatizer()
 
 
 # Returns list of noun chunk and root text
@@ -49,18 +51,24 @@ def noun_chunks_words(document) -> list:
     return words
 
 
-# Returns list of tuples, with list of words consisting being first part of the tuple, and root word the second.
+# Returns list of tuples. Tuple[1] is a list of word sentiment pairs, Tuple[2] is the root word.
 # The first list of words is list of tuples with the word/token of the chunk being paired with the sentiment value
+# E.g. ([('swift', 1), ('decay', 0)], 'decay')
+# NOTE: looks up sentiment value for the lemma for increased coverage
 def noun_chunks_sentiment(document) -> list:
     chunk_sentiment = []
 
     for item in document.noun_chunks:
         chunk = []
         for word in item.text.split():
-            chunk.append((word, s.sentiment_single_word(word)))
+            chunk.append((word, s.sentiment_single_word(lemma.lookup(word))))
         chunk_sentiment.append((chunk, item.root.text))
 
     return chunk_sentiment
+
+
+def noun_chunks_root_sentiment(document) -> dict:
+    return {}
 
 
 if __name__ == '__main__':
