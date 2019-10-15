@@ -1,8 +1,10 @@
 import spacy
+import math
 from spacy.lemmatizer import Lemmatizer
 from timeit import default_timer as timer
 from datetime import datetime
 from sentiment import classSentiment
+
 
 # TBI: pandas dataframe compatibility
 nlp = spacy.load('en_core_web_lg')
@@ -103,6 +105,20 @@ def noun_chunks_rootword_sentiment(document) -> dict:
     return roots_dict
 
 
+def noun_chunks_rootword_sentiment_score(document) -> dict:
+    roots_scores = {}
+
+    roots_dict = noun_chunks_rootword_sentiment(document)
+
+    for key in roots_dict.keys():
+        if sum(roots_dict[key]) == 0:
+            roots_scores[key] = 0
+        else:
+            roots_scores[key] = round((float((sum(roots_dict[key]) / len(roots_dict[key])))), 4)
+
+    return roots_scores
+
+
 if __name__ == '__main__':
     # Set document to be analysed below
     print(f'Starting text to document import at {datetime.now()} ...')
@@ -115,5 +131,5 @@ if __name__ == '__main__':
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(noun_chunks_roots_sentiment(doc))
+    print(noun_chunks_rootword_sentiment_score(doc))
 
