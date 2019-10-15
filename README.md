@@ -6,7 +6,9 @@ The pipelines are developed for purpise faster automated processing of named ent
 The goal is to obtain the sentiment and topics attached to the entities, and enable data export to further platforms.
 
 ### Technical
-Used packages will be included in virtual environment. 
+Used packages will be included in virtual environment.
+For Spacy language model, I have used large option, en_core_web_lg. If 'Can't find model' error rises, start terminal at environment location, and run 'python -m spacy download en_core_web_'.
+
 Main components listed below.
 
 * Python 3.7

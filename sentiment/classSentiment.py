@@ -54,7 +54,6 @@ class Sentiment(Positive, Negative):
         else:
             return 0
 
-
     @staticmethod
     def sentiment_score_text(text) -> float:
         score = [item[1] for item in Sentiment().sentiment_text(text)]
