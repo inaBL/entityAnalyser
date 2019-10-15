@@ -5,9 +5,10 @@ from timeit import default_timer as timer
 from datetime import datetime
 
 
-class Sentiment(Positive, Negative):
+class Sentiment(Negative, Positive):
     def __init__(self):
-        super().__init__()
+        Negative.__init__(self)
+        Positive.__init__(self)
 
     @staticmethod
     def sentiment_text(text_list: list) -> list:
@@ -63,7 +64,9 @@ class Sentiment(Positive, Negative):
 
 
 if __name__ == '__main__':
-    text = " I, a princess, king-descended, decked with jewels, gilded, drest, " \
+    sent = Sentiment()
+
+    text = "I, a princess, king-descended, decked with jewels, gilded, drest, " \
            "Would rather be a peasant with her baby at her breast, " \
            "For all I shine so like the sun, and am purple like the west." \
            "Two and two my guards behind, two and two before," \
