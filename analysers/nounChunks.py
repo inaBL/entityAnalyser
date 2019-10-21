@@ -1,13 +1,15 @@
 import spacy
-import math
 from spacy.lemmatizer import Lemmatizer
 from timeit import default_timer as timer
 from datetime import datetime
 from sentiment import classSentiment
+from collections import Counter
 
 
 # TBI: pandas dataframe compatibility
+
 nlp = spacy.load('en_core_web_lg')
+nlp.max_length = 1500000
 s = classSentiment.Sentiment
 lemma = Lemmatizer()
 
@@ -119,12 +121,16 @@ def noun_chunks_rootword_sentiment_score(document) -> dict:
     return roots_scores
 
 
+def noun_chunks_rootword_mostpos(document, number=10):
+    pass
+
+
 if __name__ == '__main__':
     # Set document to be analysed below
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
 
-    with open('/Users/ibl/Documents/entityAnalyser/data/goblin.txt') as f:
+    with open('/Users/ibl/Documents/entityAnalyser/data/dracula.txt') as f:
         doc = nlp(f.read())
 
     end = timer()
