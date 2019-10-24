@@ -3,10 +3,9 @@ from spacy.lemmatizer import Lemmatizer
 from timeit import default_timer as timer
 from datetime import datetime
 from sentiment import classSentiment
-from collections import Counter
 
 
-# TBI: pandas dataframe compatibility
+# TBD: pandas dataframe compatibility
 
 nlp = spacy.load('en_core_web_lg')
 nlp.max_length = 1500000
@@ -15,13 +14,13 @@ lemma = Lemmatizer()
 
 
 # Returns list of noun chunk and root word text
-def noun_chunks_list(document) -> list:
+def nc_list(document) -> list:
     chunks = [(item.text, item.root.text) for item in document.noun_chunks]
     return chunks
 
 
 # Returns list of noun chunk and root text, without new line in text
-def noun_chunks_list_cleaned(document) -> list:
+def nc_list_cleaned(document) -> list:
     chunks = []
 
     for item in document.noun_chunks:
@@ -34,7 +33,7 @@ def noun_chunks_list_cleaned(document) -> list:
 
 
 # Returns list of noun chunk text, without the root word
-def noun_chunks_min(document) -> list:
+def nc_min(document) -> list:
     chunks = []
 
     for item in document.noun_chunks:
@@ -47,7 +46,7 @@ def noun_chunks_min(document) -> list:
 
 
 # Returns list of tuples with noun chunk split into words and root word
-def noun_chunks_words(document) -> list:
+def nc_words(document) -> list:
     words = []
 
     for item in document.noun_chunks:
@@ -60,7 +59,7 @@ def noun_chunks_words(document) -> list:
 # The first list of words is list of tuples with the word/token of the chunk being paired with the sentiment value
 # E.g. ([('swift', 1), ('decay', 0)], 'decay')
 # NOTE: looks up sentiment value for the lemma for increased coverage
-def noun_chunks_sentiment(document) -> list:
+def nc_sentiment(document) -> list:
     chunk_sentiment = []
 
     for item in document.noun_chunks:
@@ -74,7 +73,7 @@ def noun_chunks_sentiment(document) -> list:
 
 # Returns list of tuples, Tuple[1] contains the sentiment values of tokens in the noun chunk, Tuple[2] is the root word.
 # E.g. ([1, 0], 'decay')
-def noun_chunks_roots_sentiment(document) -> list:
+def nc_roots_sentiment(document) -> list:
     chunk_sentiment = []
 
     for item in document.noun_chunks:
@@ -89,9 +88,9 @@ def noun_chunks_roots_sentiment(document) -> list:
 # Returns dictionary, with the root word as key and list of the chunk token sentiment values related to the key
 # E.g. 'decay': [1, 0]
 # Calls function noun_chunks_roots_sentiment()
-def noun_chunks_rootword_sentiment(document) -> dict:
+def nc_root_sentiment(document) -> dict:
     roots_dict = {}
-    sentiment, roots = zip(*noun_chunks_roots_sentiment(document))
+    sentiment, roots = zip(*nc_roots_sentiment(document))
     l_roots = [token.lower() for token in roots]
 
     l_sentiment = list(zip(l_roots, sentiment))
@@ -107,10 +106,10 @@ def noun_chunks_rootword_sentiment(document) -> dict:
     return roots_dict
 
 
-def noun_chunks_rootword_sentiment_score(document) -> dict:
+def nc_root_sentiment_score(document) -> dict:
     roots_scores = {}
 
-    roots_dict = noun_chunks_rootword_sentiment(document)
+    roots_dict = nc_root_sentiment(document)
 
     for key in roots_dict.keys():
         if sum(roots_dict[key]) == 0:
@@ -121,8 +120,15 @@ def noun_chunks_rootword_sentiment_score(document) -> dict:
     return roots_scores
 
 
-def noun_chunks_rootword_mostpos(document, number=10):
-    pass
+# Return as default 10 highest sentiment score rootwords, calls nc_root_sentiment_score
+def nc_root_mostpos(document, number=10) -> dict:
+    return dict(sorted(nc_root_sentiment_score(document).items(),
+                       key=lambda x: x[1], reverse=True)[:number])
+
+
+# Return as default 10 lowest sentiment score rootwords, calls calls nc_root_sentiment_score
+def nc_root_mostneg(document, number=10):
+    return dict(sorted(nc_root_sentiment_score(document).items(), key=lambda x: x[1])[:number])
 
 
 if __name__ == '__main__':
@@ -130,12 +136,13 @@ if __name__ == '__main__':
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
 
-    with open('/Users/ibl/Documents/entityAnalyser/data/dracula.txt') as f:
+    with open('/Users/ibl/Documents/entityAnalyser/data/iliad.txt') as f:
         doc = nlp(f.read())
 
     end = timer()
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(noun_chunks_rootword_sentiment_score(doc))
+    print(nc_root_mostneg(doc))
+    print(nc_root_mostpos(doc))
 
