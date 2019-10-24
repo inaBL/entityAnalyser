@@ -45,7 +45,9 @@ def nc_min(document) -> list:
     return chunks
 
 
-# Returns list of tuples with noun chunk split into words and root word
+# Returns list of tuples with noun chunk split into words and root word.
+# Tuple[1] being token list and Tuple[2] the rootword.
+# E.g (['swift', 'decay'], 'decay')
 def nc_words(document) -> list:
     words = []
 
@@ -53,6 +55,21 @@ def nc_words(document) -> list:
         words.append((item.text.replace('\n', '').split(), item.root.text))
 
     return words
+
+
+# Returns dictionary of all roots as keys, and all unique noun chunk tokens related to the root as list
+def nc_clusters(document) -> dict:
+    clusters = {}
+
+    for item in nc_words(document):
+        words = list(set(item[0]))
+        if item[1] not in clusters.keys():
+            clusters[item[1]] = words
+        elif item[1] in clusters.keys():
+            words = list(set(item[0] + clusters[item[1]]))
+            clusters[item[1]] = words
+
+    return clusters
 
 
 # Returns list of tuples. Tuple[1] is a list of word sentiment pairs, Tuple[2] is the root word.
@@ -136,13 +153,12 @@ if __name__ == '__main__':
     print(f'Starting text to document import at {datetime.now()} ...')
     start = timer()
 
-    with open('/Users/ibl/Documents/entityAnalyser/data/iliad.txt') as f:
+    with open('/Users/ibl/Documents/entityAnalyser/data/goblin.txt') as f:
         doc = nlp(f.read())
 
     end = timer()
     print(f'Finished text to document import at {datetime.now()}. '
           f'\nTook {end - start} seconds')
 
-    print(nc_root_mostneg(doc))
-    print(nc_root_mostpos(doc))
+    print(nc_clusters(doc))
 
